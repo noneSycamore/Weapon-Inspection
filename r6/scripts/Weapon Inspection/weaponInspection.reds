@@ -1,17 +1,13 @@
 module WeaponInspection
 // Refers to Always First Equip mod
 
-private static func WeaponInspectionAction() -> CName = n"WeaponInspection"
-
-public class WeaponInspectionConfig {
-    public static func Create() -> ref<WeaponInspectionConfig> {
-        let self = new WeaponInspectionConfig();
-        return self;
-    }
-}
+private static func WeaponInspectionAction() -> CName = n"WeaponInspection" 
 
 public class WeaponInspectionInputListener {
     private let m_player: wref<PlayerPuppet>;
+    // Replace with true if you want to use Other Animation instead of FirstEquip animation
+    private let ifOtherAnim: Bool = false;
+    private let animationName: CName = n"IdleBreak";
 
     public func SetPlayer(player: ref<PlayerPuppet>) -> Void {
         this.m_player = player;
@@ -31,15 +27,11 @@ public class WeaponInspectionInputListener {
         if Equals(ListenerAction.GetName(action), WeaponInspectionAction()) && Equals(ListenerAction.GetType(action), gameinputActionType.BUTTON_PRESSED) {
             itemID = equipmentSystemData.GetSlotActiveItem(EquipmentManipulationRequestSlot.Right);
             if itemID.IsValid() {
-                // Uncomment these lines if you find suitable animation for ranged weapon!
-                // Replace "SafeAction" with the animation you find, like "IdleBreak", but I don't think these two are suitable here
-
-                // if transactionSystem.HasTag(this.m_player, n"MeleeWeapon", itemID) {
-                    equipmentSystemData.RemoveItemFromSlotActiveItem(itemID);
-                // } else {
-                //     AnimationControllerComponent.PushEvent(this.m_player, n"SafeAction");
-                //     return true;
-                // }
+                if !transactionSystem.HasTag(this.m_player, n"MeleeWeapon", itemID) && this.ifOtherAnim {
+                    AnimationControllerComponent.PushEvent(this.m_player, this.animationName);
+                    return true;
+                }
+                equipmentSystemData.RemoveItemFromSlotActiveItem(itemID);
             } else {
                 itemID = equipmentSystemData.GetLastUsedItemID(ELastUsed.Weapon);
             }
@@ -52,7 +44,6 @@ public class WeaponInspectionInputListener {
     }
 }
 
-@addField(PlayerPuppet) let WeaponInspectionConfig: ref<WeaponInspectionConfig>;
 @addField(PlayerPuppet) let WeaponInspectionInputListener: ref<WeaponInspectionInputListener>;
 @addField(PlayerPuppet) let skipFirstEquip: Bool;
 
@@ -62,7 +53,6 @@ protected cb func OnGameAttached() -> Bool {
     this.WeaponInspectionInputListener = new WeaponInspectionInputListener();
     this.WeaponInspectionInputListener.SetPlayer(this);
     this.RegisterInputListener(this.WeaponInspectionInputListener);
-    this.WeaponInspectionConfig = WeaponInspectionConfig.Create();
 }
 
 @wrapMethod(PlayerPuppet)
@@ -70,7 +60,6 @@ protected cb func OnDetach() -> Bool {
     wrappedMethod();
     this.UnregisterInputListener(this.WeaponInspectionInputListener);
     this.WeaponInspectionInputListener = null;
-    this.WeaponInspectionConfig = null;
 }
 
 @addMethod(PlayerPuppet)
