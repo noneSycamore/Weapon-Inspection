@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<bindings>
+    <!-- inputContexts -->
+    <context name="WeaponInspection" >
+        <action name="WeaponInspection" map="WeaponInspection_Button" />
+    </context>
+
+    <context name="Items" append="true">
+        <include name="WeaponInspection" />
+    </context>
+    
+    <hold action="WeaponInspection" timeout="0.4" />
+
+    <!-- inputUserMapping -->
+    <mapping name="WeaponInspection_Button" type="Button" >
+        <button id="IK_Y" />
+    </mapping>
+</bindings>
