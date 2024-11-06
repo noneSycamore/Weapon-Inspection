@@ -21,11 +21,13 @@ If you want to change the animation for inspection:
 3. find variable "ifOtherAnim" and change its value to true
 4. find variable "animationName" and change its value to the animation you want
 
+## Update: Now holding the shortcut key can trigger SafeAction animation on v0.2.0.
+
+It looks like checking the weapon chamber to see if there is any bullets. But it only works on certain weapons, and cannot trigger when sprinting
+
 ## And this is an unfinished mod.
-Cause I am not satisfied with the inspection animation I found for ranged weapons.
 
-FirstEquip anim looks weird, IdleBreak and SafeAction are too simple.
+I am still unsatisfied with the animation
 
-Maybe I have to make new animations for some weapons, but there are so many of them. 
-
-Or maybe this mod will end up like this.
+FirstEquip anim looks weird, especially for sword,
+IdleBreak and SafeAction are too simple and cannot trigger when sprinting.
